@@ -19,7 +19,7 @@ This repository holds the source for this Specification, part of the family of [
 
 - It specifies what resources and attributes MUST be provided when using NMOS with [H.264][] streams.
 - It specifies requirements for SDP when it is used with a transport supporting SDP transport files.
-- It provides examples of how to use IS-04, IS-05 and IS-11 in the context of H.264 streams - specifically H.264 encapsulated in RTP as described in IETF [RFC-6184][]. It also desscribe to some extents how to use H.264 with other transport that encapsulate the H.264 video streams in an MPEG2-TS transport stream.
+- It provides examples of how to use IS-04, IS-05 and IS-11 in the context of H.264 streams - specifically H.264 encapsulated in RTP as described in IETF [RFC-6184][]. It also describe to some extents how to use H.264 with RTP and other transports that encapsulate the H.264 video streams in an MPEG2-TS transport stream.
 
 <!-- INTRO-END -->
 
