@@ -25,4 +25,4 @@ See https://github.com/AMWA-TV/nmos-template/docs/README.md for an example of th
 
 ### Miscellaneous
 
-- [Further Info](Further%20Info.md)
+- [Initial Proposal](Proposal.md)
