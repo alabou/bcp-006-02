@@ -1,10 +1,10 @@
-amwa_id: BCP-NMOS-H264
-url: https://specs.amwa.tv/bcp-nmos-h264
+amwa_id: BCP-006-02
+url: https://specs.amwa.tv/bcp-006-02
 name: AMWA NMOS With H.264
 status: Continuing
-repo_name: bcp-nmos-h264
+repo_name: bcp-006-02
 alt_repo_name: bcp-nmos-h264
-repo_url: https://github.com/AMWA-TV/bcp-nmos-h264
+repo_url: https://github.com/AMWA-TV/bcp-006-02
 releases:
 default_branch: main
 show_in_index: false
