@@ -9,18 +9,23 @@ This repository holds the source for this Specification, part of the family of [
 
 ### What does it do?
 
-- x
+- Enables Registration, Discovery, and Connection Management of H.264 Endpoints using the AMWA IS-04, IS-05 and IS-11 NMOS Specifications.
 
 ### Why does it matter?
 
-- x
+- It helps ensure consistency between implementations offering NMOS control for H.264 endpoints.
 
 ### How does it work?
 
-- x
+- It specifies what resources and attributes MUST be provided when using NMOS with [H.264][] streams.
+- It specifies requirements for SDP when it is used with a transport supporting SDP transport files.
+- It provides examples of how to use IS-04, IS-05 and IS-11 in the context of H.264 streams - specifically H.264 encapsulated in RTP as described in IETF [RFC-6184][]. It also desscribe to some extents how to use H.264 with other transport that encapsulate the H.264 video streams in an MPEG2-TS transport stream.
 
 <!-- INTRO-END -->
 
 ## Getting started
 
 There is more information about the NMOS Specifications and their GitHub repos at <https://specs.amwa.tv/nmos>.
+
+[H.264]: https://www.itu.int/rec/T-REC-H.264 "Advanced video coding for generic audiovisual services"
+[RFC-6184]: https://tools.ietf.org/html/rfc6184 "RTP Payload Format for H.264 Video"
