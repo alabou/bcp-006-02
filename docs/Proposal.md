@@ -1,4 +1,7 @@
 # AMWA BCP-006-02: NMOS With H.264
+
+> Note: This document contains normative and informative text about BCP-006-02 (H.264) and also BCP-006-03 (H.265). Both specifications are developed simultaneously from this initial working proposal and progressively the text will be moved in the appropriate BCP-006 document.
+
 {:.no_toc}
 
 * A markdown unordered list which will be replaced with the ToC, excluding the "Contents header" from above
