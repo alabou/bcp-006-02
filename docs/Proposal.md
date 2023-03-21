@@ -10,22 +10,29 @@
 _(c) AMWA 2023, CC Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)_
 
 H.264 is a technology standardized in Rec. [ITU-T H.264][H.264] | ISO/IEC 14496 for video contribution at high compression rate and video quality.
-A companion RTP payload format specification was developed through the IETF Payloads working group, IETF [RFC 6184][RFC-6184].
+A companion RTP payload format specification was developed through the IETF Payloads working group, IETF [RFC 6184][RFC-6184] for the transport of an H.264 bitstream over RTP. 
+
+The BCP-006-02 specification includes support for H.264 bitstreams that are compliant with the clauses of the main document and annexes A, B, C, D and E of the [ITU-T H.264][H.264] | ISO/IEC 14496 specification. It excludes support for bitstreams that are compliant with other annexes of the specification.
+> Annex F (deprecated), Annex G (scalable video coding), Annex H (multiview video coding), Annex I (multiview and depth video coding) and Annex J (multiview and depth video with enhanced non-base view coding) are not supported.
+
+The [ITU H.222][H.222] specification and associated amendments describe the embedding of an H.264 stream in an MPEG2-TS transport stream. An RTP payload format specification for MPEG2-TS transport stream was developed through the IETF Payloads working group, IETF [RFC 2550][RFC-2550] for transport over RTP. Other normative documents may describe the requirements for the streaming of an MPEG2-TS transport stream over other non-RTP transports.
 
 - [ ] H.265 is a technology standardized in Rec. [ITU-T H.265][H.265] | ISO/IEC 23008 for video contribution at high compression rate and video quality.
-A companion RTP payload format specification was developed through the IETF Payloads working group, IETF [RFC 7798][RFC-7798].
+A companion RTP payload format specification was developed through the IETF Payloads working group, IETF [RFC 7798][RFC-7798] for the transport of an H.265 bitstream over RTP.
 
-The [Video Services Forum][VSF] developed Technical Recommendation [TR-??][] and [TR-??][] of the IPMX suite of protocols, which cover the end-to-end application use of constant and variable bitrate compression for video, using the SMPTE ST 2110 and IPMX suite of protocols.
-TR-?? and TR-?? mandate the use of the AMWA [IS-04][] and [IS-05][] NMOS Specifications in IPMX compliant systems.
+The BCP-006-03 specification includes support for bitstreams that are compliant with the clauses of the main document and annexes A, B, C, D and E of the [ITU-T H.265][H.265] | ISO/IEC 23008 specification. It excludes support for bitstreams that are compliant with other annexes of the specification.
+> Annex F (multi-layers extensions), Annex G (multiview high efficiency video coding), Annex H (scalable high efficiency video coding) and Annex I (3D high efficiency video coding) are not supported.
+
+The [ITU H.222][H.222] specification and associated amendments describe the embedding of an H.265 stream in an MPEG2-TS transport stream. An RTP payload format specification for MPEG2-TS transport stream was developed through the IETF Payloads working group, IETF [RFC 2550][RFC-2550] for transport over RTP. Other normative documents may describe the requirements for the streaming of an MPEG2-TS transport stream over other non-RTP transports.
+
+The [Society of Media Professionals, Technologists and Engineers][SMPTE] developed Standard [ST 2110-22][ST-2110-22] of the ST 2110 suite of protocols, which cover the end-to-end application use of constant bitrate compression for video over managed IP networks.
+> Note that the definition of constant bitrate of ST 2110-22 is very strict "The video compression or the packetization of the video compression shall produce a constant number of bytes per frame. The packetization shall produce a constant number of RTP packets per frame.". This definition of constant bitrate is hereafter described as strict-CBR, using the H.264/H.265 definition of constant bitrate for CBR.
+
+The [Video Services Forum][VSF] developed Technical Recommendation [TR-10-11][TR-10-11] and [TR-10-??][TR-10-??] of the IPMX suite of protocols, which cover the end-to-end application use of constant and variable bitrate compression for video, using the SMPTE ST 2110 and IPMX suite of protocols.
+
+TR-10-11 and TR-10-?? mandate the use of the AMWA [IS-04][IS-04] and [IS-05][IS-05] NMOS Specifications in IPMX compliant systems.
 
 AMWA IS-04 and IS-05 already have support for RTP transport and can signal the media type `video/H264` as defined in RFC 6184.
-
-- [ ] TODO: Current ST-2110 suite of protocols only support constant bit-rate streams. An new protocol for variable bit-rate is required. How should we refer to this upcoming variable bit-rate specification?
-  - The ST-2110 definition of constant bit rate is not compatible with compressed video style H.264/H.265 "The video compression or the packetization of the video compression shall produce a constant number of bytes per frame. The packetization shall produce a constant number of RTP packets per frame." CBR for H.264/H.265 does not mean constant number of bits per frame but in a time period ... Unless using intra only compression.
-- [ ] TODO: Should we reference the VSF's IPMX protocol here or limit to actual ST-2110 protocols which IPMX uses.
-- [ ] TODO: References are made to the ITU-T H.264 specification instead of the ISO because it is more accessible (free).
-- [ ] TODO: This specification shall be written without assuming ST-2110 transport ... It shall only be based on RFC 6184 and add "if ST-2110 is used then" ...
-- [ ] TODO: Issue in the way format specifications are written: what if a Flow has not associated Sender but is a child of a MUX Flow which is associated with a Sender. The Sender is the one streaming the multiplexed Flows and cannot receive the properties of each H.264 Flows because there may be multiple such Flows and we get properties clashing at the Sender ....
 
 ## Use of Normative Language
 
@@ -35,6 +42,12 @@ and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119]
 ## Definitions
 
 The NMOS terms 'Controller', 'Node', 'Source', 'Flow', 'Sender', 'Receiver' are used as defined in the [NMOS Glossary](https://specs.amwa.tv/nmos/main/docs/Glossary.html).
+
+The term 'strict-CBR' corresponds to the definition of constant bit-rate at section 4 "Video Compression and Packetization" of the ST 2110-22 standard.
+
+The terms CBR and VBR are defined in the [ITU-T H.264][H.264] | ISO/IEC 14496 standard.
+
+The terms CBR and VBR are defined in the [ITU-T H.265][H.265] | ISO/IEC 23008 standard.
 
 ## H.264 IS-04 Sources, Flows and Senders
 
@@ -65,12 +78,12 @@ These attributes provide information for Controllers and Users to evaluate strea
 
   If a stream complies with other specifications in addition to RFC 6184 about the parameters declared in the "fmtp=" attribute of an SDP transport file, those parameters MUST comply with the stream's active parameter set.
 
-  Informative note: It implies that having SDP parameters describing aspects of the stream's active paramter set produces change of the SDP transport file content when the stream's active parameter set values change.
+  Informative note: It implies that having SDP parameters describing aspects of the stream's active parameter set produces change of the SDP transport file content when the stream's active parameter set values change.
 
   Informative note: The information encoded in the `components` attribute should also be provided in the SDP transport file. What a Controller observes, a Receiver should also observe it. There is an exception with in-band parameter sets where the information is provided in-band for the Receiver, not in the SDP transport file. In such a case a Controller still has access to the `components` attribute. A Receiver would not have access to such information at `PATCH` request on the **/staged** endpoint but just-in time while decoding the bitstream active parameter set.
 
 - [Profile](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#profile)
-  The Flow resource MUST indicate the H.264 profile, which defines algorithmic features and limits that SHALL be supported by all decoders conforming to that profile. The Flow's `profile` attribute maps to the `profile-level-id` parameter of the SDP transport file which is OPTIONAL according to RFC 6184 and REQUIRED by this specification unless the `profile-level-id` parameter corresponds to the default value, in which case it MAY be omited.
+  The Flow resource MUST indicate the H.264 profile, which defines algorithmic features and limits that SHALL be supported by all decoders conforming to that profile. The Flow's `profile` attribute maps to the `profile-level-id` parameter of the SDP transport file which is OPTIONAL according to RFC 6184 and REQUIRED by this specification unless the `profile-level-id` parameter corresponds to the default value, in which case it MAY be omitted.
   The permitted `profile` values are strings, defined as per ITU-T Rec. H.264 Annex A
   - "ConstrainedBaseline"
   - "Baseline" (Default if not specified in the SDP transport file)
@@ -88,11 +101,11 @@ These attributes provide information for Controllers and Users to evaluate strea
   - "HighIntra-444"
   - "CAVLCIntra-444"
 
-    Informative note: The Flow's `profile` attribute is always required. It is the SDP transport file `profile-level-id` parameter that MAY be omited when matching the default value.
+    Informative note: The Flow's `profile` attribute is always required. It is the SDP transport file `profile-level-id` parameter that MAY be omitted when matching the default value.
 
     Informative note: The value of `profile-level-id` corresponds to the members profile_idc, level_idc and constraint_set?_flag of the AVC_video_descriptor of an MPEG2-TS transport stream.
 
-  - [ ] The Flow resource MUST indicate the H.265 profile, which defines algorithmic features and limits that SHALL be supported by all decoders conforming to that profile. The Flow's `profile` attribute maps to the `profile-space`, `profile-id`, `profile-compatibility-indicator`, `interop-constraints` parameters of the SDP transport file which are OPTIONAL according to RFC 7798 and REQUIRED by this specification unless the `profile-id` parameter corresponds to the default value, in which case they MAY be omited.
+  - [ ] The Flow resource MUST indicate the H.265 profile, which defines algorithmic features and limits that SHALL be supported by all decoders conforming to that profile. The Flow's `profile` attribute maps to the `profile-space`, `profile-id`, `profile-compatibility-indicator`, `interop-constraints` parameters of the SDP transport file which are OPTIONAL according to RFC 7798 and REQUIRED by this specification unless the `profile-id` parameter corresponds to the default value, in which case they MAY be omitted.
 
   The permitted `profile` values are strings, defined as per ITU-T Rec. H.265 Annex A
 
@@ -133,12 +146,12 @@ These attributes provide information for Controllers and Users to evaluate strea
   - "ScreenExtendedHighThroughput10-444"
   - "ScreenExtendedHighThroughput14-444"
 
-  - [ ] Informative note: The Flow's `profile` attribute is always required. It is the SDP transport file `profile_space`, `profile-id`, `profile-compatibility-indicator` and `interop-constraints` parameters that MAY be omited when matching the default value.
+  - [ ] Informative note: The Flow's `profile` attribute is always required. It is the SDP transport file `profile_space`, `profile-id`, `profile-compatibility-indicator` and `interop-constraints` parameters that MAY be omitted when matching the default value.
 
   - [ ] Informative note: The value of `profile_space`, `profile-id`, `profile-compatibility-indicator` and `interop-constraints` corresponds to the members profile_space, profile_idc, profile_compatibility_indication, progressive_source_flag, interlaced_source_flag, non_packed_constraint_flag, frame_only_constraint_flag and copied_44bits and  of the HEVC_video_descriptor of an MPEG2-TS transport stream.
 
 - [Level](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#level)
-  The Flow resource MUST indicate the H.264 level, which defines a set of limits on the values that may be taken by the syntax elements of an H.264 bitstream. The Flow's `level` attribute map to the `profile-level-id` parameter of the SDP transport file which is OPTIONAL according to RFC 6184 and REQUIRED by this specification unless the `profile-level-id` parameter corresponds to the default value, in which case it MAY be omited.
+  The Flow resource MUST indicate the H.264 level, which defines a set of limits on the values that may be taken by the syntax elements of an H.264 bitstream. The Flow's `level` attribute map to the `profile-level-id` parameter of the SDP transport file which is OPTIONAL according to RFC 6184 and REQUIRED by this specification unless the `profile-level-id` parameter corresponds to the default value, in which case it MAY be omitted.
   The permitted `level` values are strings, defined as per ITU-T Rec. H.264 Annex A
   - "1" (Default if not specified in the SDP transport file)
   - "1b", "1.1", "1.2", "1.3"
@@ -148,11 +161,11 @@ These attributes provide information for Controllers and Users to evaluate strea
   - "5", "5.1", "5.2"
   - "6", "6.1", "6.2"
 
-  Informative note: The Flow's `level` attribute is always required. It is the SDP transport file `profile-level-id` parameter that MAY be omited when matching the default value.
+  Informative note: The Flow's `level` attribute is always required. It is the SDP transport file `profile-level-id` parameter that MAY be omitted when matching the default value.
 
   Informative note: The value of `profile-level-id` corresponds to the members profile_idc, level_idc and constraint_set?_flag of the AVC_video_descriptor of an MPEG2-TS transport stream.
 
-- [ ] The Flow resource MUST indicate the H.265 level, which defines a set of limits on the values that may be taken by the syntax elements of an H.265 bitstream. The Flow's `level` attribute map to the `level-id` and `tier-flag` parameters of the SDP transport file which is OPTIONAL according to RFC 7798 and REQUIRED by this specification unless the `level-id` and `tier-flag` parameters correspond to the default value, in which case they MAY be omited.
+- [ ] The Flow resource MUST indicate the H.265 level, which defines a set of limits on the values that may be taken by the syntax elements of an H.265 bitstream. The Flow's `level` attribute map to the `level-id` and `tier-flag` parameters of the SDP transport file which is OPTIONAL according to RFC 7798 and REQUIRED by this specification unless the `level-id` and `tier-flag` parameters correspond to the default value, in which case they MAY be omitted.
   The permitted `level` values are strings, defined as per ITU-T Rec. H.265 Annex A
   - "1"
   - "2", "2.1"
@@ -169,7 +182,7 @@ These attributes provide information for Controllers and Users to evaluate strea
   - "High-6", "High-6.1", "High-6.2"
   - "High-8.5"
 
-  - [ ] Informative note: The Flow's `level` attribute is always required. It is the SDP transport file `level-id` and `tier-flag` parameters that MAY be omited when matching the default value.
+  - [ ] Informative note: The Flow's `level` attribute is always required. It is the SDP transport file `level-id` and `tier-flag` parameters that MAY be omitted when matching the default value.
 
   - [ ] Informative note: The value of `level-id` and `tier-flag` corresponds to the members level_idc and tier_flag of the HEVC_video_descriptor of an MPEG2-TS transport stream.
 
@@ -201,8 +214,6 @@ The SDP file at the `manifest_href` MUST comply with the requirements of RFC 618
 Additionally, the SDP file needs to convey, so far as the defined parameters allow, the same information about the stream as conveyed by the Source, Flow and Sender attributes defined by this specification and IS-04.
 
 Therefore:
-
-2 hours reserved on Ely Monday to start on possible hack-fest:
 
 - The `profile-level-id` format-specific parameters MUST be included with the correct value unless it corresponds to the default value.
 - The `packetization-mode` format-specific parameters MUST be included with the correct value unless it corresponds to the default value.
@@ -290,9 +301,9 @@ The H.264 encoder of a Sender MUST produces an H.264 bitstream that is compliant
 
 - [ ] The H.265 encoder of a Sender MUST produces an H.265 bitstream that is compliant with the `profile-id`, `level-id` and `tier-flag` explicitely or implicitely declared in the stream's associated SDP transport file.
 
-#### Parent Flows
+#### Multiplexed Flows
 
-Flow resources can be associated with many Senders and many other Flows at the same time. A Flow resource MAY be the parent of many another Flow resources. A Sender associated with a Flow having some H.264 parents Flows MAY declare the `parameter_sets_flow_mode` and `parameter_sets_transport_mode` properties that apply for all the parents H.264 bistreams flowing through the Sender.
+Flow resources can be associated with many Senders and many other Flows at the same time. A Flow resource MAY be the parent of many other Flow resources. A Sender associated with a Flow having some H.264 parents Flows MAY declare the `parameter_sets_flow_mode` and `parameter_sets_transport_mode` properties that apply for all the parents H.264 bistreams flowing through the Sender.
 
 ## H.264 IS-04 Receivers
 
@@ -371,9 +382,9 @@ An example Receiver resource is provided in the [Examples](../examples/).
 
 A Receiver MUST be able to decode a bitstream conforming to the profiles and levels declared in the Receiver Capabilities. A Receiver MAY have preferences and more optimal profiles and levels that MAY be declared through Receiver Capabilities. A preferred constraint set MAY indicate such preferences while another constraint set MAY indicate full support of some profiles and levels. A Receiver MAY further constraint the support of a coded bitstream compliant with a profile and level using other constraints in its Receiver Capabilities.
 
-#### Parent Flows
+#### Multiplexed Flows
 
-Flow resources can be associated with many Senders and many other Flows at the same time. A Flow resource MAY be the parent of many another Flow resources. A Receiver consuming a stream whose Sender is associated with a Flow having some parents H.264 Flows MAY declare constraints that apply for all the parents H.264 bistreams flowing through the Sender.
+Flow resources can be associated with many Senders and many other Flows at the same time. A Flow resource MAY be the parent of many other Flow resources. A Receiver consuming a stream whose Sender is associated with a Flow having some parents H.264 Flows MAY declare constraints that apply for all the parents H.264 bistreams flowing through the Sender.
 
 #### RTP based transport
 
@@ -435,13 +446,13 @@ The `parameter_sets_flow_mode` Receiver Capability indicates when set to "dynami
 
 > The Flow bit_rate property is not included in the previous criterion to allow changing HRD parameters to adapt to IP usable bandwidth changing conditions in `static` mode.
 
-A Receiver with this capability set to "strict" requires that a coded stream uses picture parameter sets that are defined once and associated to at most one Flow and at most one sequence parameter set that is defined once. Such parameter sets MAY be obtained out-of-band or in-band depending on the Receiver `parameter_sets_transport_mode` Capability. When obtained out-of-band the `sprop-parameter-sets` parameter of an SDP transport file MUST contain picture parameter sets associated to only one Flow and one sequence parameter set. When obtained in-band the `sprop-parameter-sets` parameter of an SDP transport file MUST be empty or omited and the Sender transmits the picture parameter sets associated to the Flow in-band along with a sequence parameter set. At all time, the Sender is allowed to transmit in-band parameter sets that are duplicates of the parameter sets obtained either out-of-band or in-band. When obtained in-and-out-of-band, in-band parameter sets have priority over out-of-band parameters sets.
+A Receiver with this capability set to "strict" requires that a coded stream uses picture parameter sets that are defined once and associated to at most one Flow and at most one sequence parameter set that is defined once. Such parameter sets MAY be obtained out-of-band or in-band depending on the Receiver `parameter_sets_transport_mode` Capability. When obtained out-of-band the `sprop-parameter-sets` parameter of an SDP transport file MUST contain picture parameter sets associated to only one Flow and one sequence parameter set. When obtained in-band the `sprop-parameter-sets` parameter of an SDP transport file MUST be empty or omitted and the Sender transmits the picture parameter sets associated to the Flow in-band along with a sequence parameter set. At all time, the Sender is allowed to transmit in-band parameter sets that are duplicates of the parameter sets obtained either out-of-band or in-band. When obtained in-and-out-of-band, in-band parameter sets have priority over out-of-band parameters sets.
 
-A Receiver with this capability set to "static" requires that a coded stream uses parameter sets associated to at most one Flow. Such parameter sets MAY be obtained out-of-band or in-band depending on the Receiver `parameter_sets_transport_mode` Capability. When obtained out-of-band the `sprop-parameter-sets` parameter of an SDP transport file MUST contain parameter sets associated to only one Flow. When obtained in-band the `sprop-parameter-sets` parameter of an SDP transport file MUST be empty or omited and the Sender transmits the parameter sets associated to the Flow in-band. At all time, the Sender is allowed to transmit in-band parameter sets that are duplicates of the parameter sets obtained either out-of-band or in-band. When obtained in-and-out-of-band, in-band parameter sets have priority over out-of-band parameters sets.
+A Receiver with this capability set to "static" requires that a coded stream uses parameter sets associated to at most one Flow. Such parameter sets MAY be obtained out-of-band or in-band depending on the Receiver `parameter_sets_transport_mode` Capability. When obtained out-of-band the `sprop-parameter-sets` parameter of an SDP transport file MUST contain parameter sets associated to only one Flow. When obtained in-band the `sprop-parameter-sets` parameter of an SDP transport file MUST be empty or omitted and the Sender transmits the parameter sets associated to the Flow in-band. At all time, the Sender is allowed to transmit in-band parameter sets that are duplicates of the parameter sets obtained either out-of-band or in-band. When obtained in-and-out-of-band, in-band parameter sets have priority over out-of-band parameters sets.
 
 Informative note: The "static" mode allows multiple VPS, SPS and PPS to be used by the coded bitstream along the active values associated to Flow properties do not change. For example scaling list are allowed to change whenthe profile allows it.
 
-A Receiver with this capability set to "dynamic" supports that a coded stream uses parameter sets that MAY be associated to multiple Flows. Such parameter sets MAY be obtained out-of-band or in-band according to the Receiver `parameter_sets_transport_mode` Capability. When obtained out-of-band the `sprop-parameter-sets` parameter of an SDP transport file MAY contain parameter sets associated to multiple Flows. When obtained in-band the `sprop-parameter-sets` parameter of an SDP transport file MUST be empty or omited and the Sender MAY transmit in-band parameter sets to update parameter sets initially received out-of-band or to add and update new ones. At all time, the Sender is allowed to transmit in-band parameter sets that are duplicates of the parameter sets obtained either out-of-band or in-band. When obtained in-and-out-of-band, in-band parameter sets have priority over out-of-band parameters sets
+A Receiver with this capability set to "dynamic" supports that a coded stream uses parameter sets that MAY be associated to multiple Flows. Such parameter sets MAY be obtained out-of-band or in-band according to the Receiver `parameter_sets_transport_mode` Capability. When obtained out-of-band the `sprop-parameter-sets` parameter of an SDP transport file MAY contain parameter sets associated to multiple Flows. When obtained in-band the `sprop-parameter-sets` parameter of an SDP transport file MUST be empty or omitted and the Sender MAY transmit in-band parameter sets to update parameter sets initially received out-of-band or to add and update new ones. At all time, the Sender is allowed to transmit in-band parameter sets that are duplicates of the parameter sets obtained either out-of-band or in-band. When obtained in-and-out-of-band, in-band parameter sets have priority over out-of-band parameters sets
 
 A Sender is allowed, unless constrained by IS-11, to produces H.264 coded streams that comply with the `profile-level-id` declared in the Sender's SDP transport file and the `profile` and `level` of the associated Flow. Such a Sender MAY use one or multiple active parameter sets as per the [H.264][] specification. A Sender MAY seamlessly change dynamically the coded stream's active parameter set, provided that the Flow associated with the Sender changes accordingly and the content of the SDP transport file does not change. If the content of the SDP transport file changes, the Sender SHALL comply with IS-04, IS-05. A Sender indicates its mode of operation with the `parameter_sets_flow_mode` and `parameter_sets_transport_mode` attributes.
 
@@ -473,6 +484,8 @@ Controllers MUST support the BCP-004-01 Receiver Capabilities mechanism and all 
 [IS-04]: https://specs.amwa.tv/is-04/ "AMWA IS-04 NMOS Discovery and Registration Specification"
 [IS-05]: https://specs.amwa.tv/is-05/ "AMWA IS-05 NMOS Device Connection Management Specification"
 [NMOS Parameter Registers]: https://specs.amwa.tv/nmos-parameter-registers/ "Common parameter values for AMWA NMOS Specifications"
-[TR-??]: https://vsf.tv/download/technical_recommendations/VSF_TR-??_2022-04-20.pdf ""
+[TR-10-11]: https://vsf.tv/download/technical_recommendations/VSF_TR-10-11_2023-??-??.pdf ""
+[TR-10-??]: https://vsf.tv/download/technical_recommendations/VSF_TR-10-??_2023-??-??.pdf ""
 [VSF]: https://vsf.tv/ "Video Services Forum"
-<!--- [ST-2110-20]: https://ieeexplore.ieee.org/document/8167389 "ST 2110-20:2017 - SMPTE Standard - Professional Media Over Managed IP Networks: Uncompressed Active Video" --->
+[SMPTE]: https://www.smpte.org/ "Society of Media Professionals, Technologists and Engineers"
+[ST-2110-22]: https://ieeexplore.ieee.org/document/9893780 "ST 2110-22:2022 - SMPTE Standard - Professional Media Over Managed IP Networks: Constant Bit-Rate Compressed Video"
