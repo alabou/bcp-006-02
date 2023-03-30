@@ -63,27 +63,27 @@ In addition to those attributes defined in IS-04 for all coded video Flows, the 
 These attributes provide information for Controllers and Users to evaluate stream compatibility between Senders and Receivers.
 
 - [Components](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#components)
+  
   The Flow resource MUST indicate the color (sub-)sampling, width, height and depth of the associated uncompressed picture using the `components` attribute. The `components` array values MUST correspond to the stream's active parameter sets. A Flow MUST track the stream's current active parameter sets.
 
 Informative note: ST 2110-22 does not require the `sampling` or `depth` SDP parameters. RFC 6184 does not define any such SDP parameters. The `sampling` and `depth` of the associated uncompressed picture could be derived from the H.264 active parameter sets by a Receiver.
 
 - [Profile](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#profile)
-  The Flow resource MUST indicate the H.264 profile, which defines algorithmic features and limits that MUST be supported by all decoders conforming to that profile. The stream's active parameter sets MUST be compliant with the `profile` attribute of the Flow. The permitted `profile` values are strings, defined as per ITU-T  Rec. H.264 Annex A
+
+  The Flow resource MUST indicate the H.264 profile, which defines algorithmic features and limits that MUST be supported by all decoders conforming to that profile. The stream's active parameter sets MUST be compliant with the `profile` attribute of the Flow. The permitted `profile` values are strings, defined as per Rec. ITU-T H.264 Annex A
 
   - "BaselineConstrained"
   - "Baseline" (Default if not specified in the SDP transport file)
   - "Main"
   - "Extended"
-  - "High"
+  - "High", "High-422"
   - "HighProgressive"
   - "HighConstrained"
   - "High10"
   - "High10Progressive"
-  - "High-422"
   - "HighPredictive-444"
   - "High10Intra"
-  - "HighIntra-422"
-  - "HighIntra-444"
+  - "HighIntra-422", "HighIntra-444"
   - "CAVLCIntra-444"
 
 Informative note: The names of the profiles in string form have been derived from the names used at Annex A of the H.264 standard with whitespace omitted, the sampling mode always positioned at the end of the string, preceded by a '-' and the terms High and Baseline positioned at the beginning of the string.
@@ -91,7 +91,8 @@ Informative note: The names of the profiles in string form have been derived fro
 The profile strings in this specification are included in the [NMOS Parameter Registers][]. Additional strings may be added there in the future.
 
 - [Level](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#level)
-  The Flow resource MUST indicate the H.264 level, which defines a set of limits on the values that may be taken by the syntax elements of an H.264 bitstream. The stream's active parameter sets MUST be compliant with the `level` attribute of the Flow. The permitted `level` values are strings, defined as per ITU-T Rec. H.264 Annex A
+  
+  The Flow resource MUST indicate the H.264 level, which defines a set of limits on the values that may be taken by the syntax elements of an H.264 bitstream. The stream's active parameter sets MUST be compliant with the `level` attribute of the Flow. The permitted `level` values are strings, defined as per Rec. ITU-T H.264 Annex A
 
   - "1" (Default if not specified in the SDP transport file)
   - "1b", "1.1", "1.2", "1.3"
@@ -112,11 +113,13 @@ The Flow's `profile` and `level` attributes map to the members profile_idc, leve
 Informative note: The Flow's `profile` and `level` attributes are always required. The SDP transport file `profile-level-id` parameter may be omitted when matching the default value.
 
 - [Bit Rate](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#bit-rate)
+  
   The Flow resource MUST indicate the target encoding bit rate (kilobits/second) of the H.264 bitstream. The stream's active parameter sets MUST be compliant with the `bit_rate` attribute of the Flow. The `bit_rate` integer value is expressed in units of 1000 bits per second, rounding up.
 
   Informative note: The H.264 bitstream is not required to transport hypothetical reference decoder (HRD) parameters such that an H.264 decoder may not know the actual target bit rate of a stream. There are bit rate limits imposed by the level of the coded bitstream. IS-11 may be used to constraint the Sender to a target bit rate compatible with the Receiver Capabilities.
 
 - [Constant Bit Rate](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#constant-bit-rate)
+  
   The Flow resource MUST indicate if it operates in constant bit rate (CBR) mode or variable bit rate mode (VBR or other). When operating in constant bit rate mode the `bit_rate` corresponds to the constant encoding bit rate. Otherwise it corresponds to the maximum encoding bit rate. Since the default value of this attribute is `false`, a Flow MAY omit this attribute when using a variable bit rate mode.
 
 Informative note: The maximum bit rate information relates to the codec profile / level limits and the HRD buffering model. The CBR versus VBR mode of operation of the encoder provide essential clues about the coded bitstream produced.
@@ -138,6 +141,7 @@ For Nodes implementing IS-04 v1.3 or higher, the following additional requiremen
 In addition to those attributes defined in IS-04 for Senders, the following attributes defined in the [Sender Attributes Register](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/) of the NMOS Parameter Registers are used for H.264.
 
 - [Bit Rate](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#bit-rate)
+  
   The Sender resource SHOULD indicate the target bit rate (kilobits/second) including the transport overhead of the H.264 stream. The value is for the IP packets, so for the RTP payload format per RFC 6184, that includes the RTP, UDP and IP packet headers and the payload. The `bit_rate` integer value is expressed in units of 1000 bits per second, rounding up. The Sender's transport `bit_rate` value MUST derive from the Flow's encoding `bit_rate` value and according to the Flow's `constant_bit_rate` attribute it corresponds to a constant bit rate or a maximum bit rate. 
 
   If the Sender meets the traffic shaping and delivery timing requirements specified for ST 2110-22 it MUST indicate the transport `bit_rate`.
@@ -145,15 +149,19 @@ In addition to those attributes defined in IS-04 for Senders, the following attr
   Informative note: This definition is consistent with the definition of the bit rate attribute required by ST 2110-22 in the SDP media description. There is no such SDP attribute in RFC 6184.
 
 - [Packet Transmission Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#packet-transmission-mode)
+  
   A Sender using the non-interleaved or interleaved packetization modes MUST include the `packet_transmission_mode` attribute and set it to either `non_interleaved_nal_units` or `interleaved_nal_units`. The `packet_transmission_mode` attribute maps the the RFC 6184 `packetization-mode` parameter with `single_nal_unit` corresponding to value 0, `non_interleaved_nal_units` to value 1 and `interleaved_nal_units` to value 2. Since the default value of this attribute is `single_nal_unit`, the Sender MAY omit this attribute when using that mode. 
 
 - [ST 2110-21 Sender Type](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#st-2110-21-sender-type)
+  
   If the Sender complies with the traffic shaping and delivery timing requirements for ST 2110-22, it MUST include the `st2110_21_sender_type` attribute.
 
 - [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
+  
   A Sender operating in strict-Flow mode MUST set the `parameter_sets_flow_mode` attribute to `strict` and if operating in static-Flow mode it MUST set the `parameter_sets_flow_mode` attribute to `static`. Otherwise it MAY omit or set the `parameter_sets_flow_mode` attribute to `dynamic`. If unspecified the default value is `dynamic`. See the "Parameter Sets" section for more details.
 
 - [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)
+  
   A Sender operating with out-of-band parameter sets MUST set the `parameter_sets_transport_mode` attribute to either `out_of_band` or `in_and_out_of_band`. Otherwise it MAY omit or set the `parameter_sets_transport_mode` attribute to `in_band`. If unspecified the default value is `in_band`. See the "Parameter Sets" section for more details.
 
 The H.264 encoder associated with a Sender MUST produces an H.264 bitstream that is compliant with the `profile-level-id` explicitely or implicitely declared in the stream's associated SDP transport file or the members profile_idc, level_idc and constraint_set\<N\>_flag of the AVC_video_descriptor of an MPEG2-TS transport stream.
@@ -196,9 +204,11 @@ Sender resources provide no indication of media type or format, since this is de
 The `manifest_href` attribute MAY be `null` if an SDP transport file is not supported by the transport. Otherwise the SDP transport file MUST comply the transport specific requirements. There is no SDP format-specific parameters requirements for transports other than RTP.
 
 - [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
+  
   A Sender operating in strict-Flow mode MUST set the `parameter_sets_flow_mode` attribute to `strict` and if operating in static-Flow mode it MUST set the `parameter_sets_flow_mode` attribute to `static`. Otherwise it MAY omit or set the `parameter_sets_flow_mode` attribute to `dynamic`. If unspecified the default value is `dynamic`. See the "Parameter Sets" section for more details.
 
 - [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)
+  
   A Sender operating with out-of-band parameter sets MUST set the `parameter_sets_transport_mode` attribute to either `out_of_band` or `in_and_out_of_band`. Otherwise it MAY omit or set the `parameter_sets_transport_mode` attribute to `in_band`. If unspecified the default value is `in_band`. See the "Parameter Sets" section for more details.
 
 Informative note: The out of band mechanism used to transport parameter sets is transport specific and out of the scope of this specification.
@@ -258,6 +268,7 @@ The following parameter constraints can be used to express limits or preferences
   A Receiver based on RTP transport declares the `packet_transmission_mode` capability to indicate the NAL units packetization modes that it supports. RFC 6184 require the `single_nal_unit` packetization mode to be supported by all the H.264 Receivers. As such a constrained Receiver MUST have a `packet_transmission_mode` capability enumerating the "single_nal_unit" value and optionally it MAY also enumerate the "non_interleaved_nal_units" and "interleaved_nal_units" values.
 
 - [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
+  
   A Receiver declares the `parameter_sets_flow_mode` capability to indicate that it supports bitstreams using parameter sets associated to strictly one (`strict`), one (`static`) or multiple (`dynamic`) Flows. Considering that an active parameter set is associated to a specific Flow, this capability indicates that a Receiver is capable or not of decoding an H.264 bitstream where the associated Flow properties change dynamically. 
   
   A Receiver supporting the `dynamic` mode MUST also support the `strict` and `static` modes. Such Receiver SHOULD have `strict`, `static` and `dynamic` values enumerated in the Receiver Capability in order to allow Senders operating in any `parameter_sets_flow_mode`.
@@ -277,6 +288,7 @@ For Nodes consuming H.264 using other transports, the Receiver resource MUST ind
 The following parameter constraints can be used to express limits or preferences specifically defined for H.264 decoders:
 
 - [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
+  
   A Receiver declares the `parameter_sets_flow_mode` capability to indicate that it supports bitstreams using parameter sets associated to strictly one (`strict`), one (`static`) or multiple (`dynamic`) Flows. Considering that an active parameter set is associated to a specific Flow, this capability indicates that a Receiver is capable or not of decoding an H.264 bitstream where the associated Flow properties change dynamically. 
 
   A Receiver supporting the `dynamic` mode MUST also support the `strict` and `static` modes. Such Receiver SHOULD have `strict`, `static` and `dynamic` values enumerated in the Receiver Capability in order to allow Senders operating in any `parameter_sets_flow_mode`.
