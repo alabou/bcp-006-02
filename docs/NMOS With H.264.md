@@ -109,7 +109,7 @@ The Flow's `profile` and `level` attributes map to the `profile-level-id` parame
 
 The Flow's `profile` and `level` attributes map to the members profile_idc, level_idc and constraint_set\<N\>_flag of the AVC_video_descriptor of an MPEG2-TS transport stream. See section Multiplexed Flows.
 
-Informative note: The Flow's `profile` and `level` attributes are always required. The SDP transport file `profile-level-id` parameter MAY be omitted when matching the default value.
+Informative note: The Flow's `profile` and `level` attributes are always required. The SDP transport file `profile-level-id` parameter may be omitted when matching the default value.
 
 - [Bit Rate](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#bit-rate)
   The Flow resource MUST indicate the target encoding bit rate (kilobits/second) of the H.264 bitstream. The stream's active parameter sets MUST be compliant with the `bit_rate` attribute of the Flow. The `bit_rate` integer value is expressed in units of 1000 bits per second, rounding up.
@@ -127,6 +127,38 @@ Examples Flow resources are provided in [Examples](../examples/).
 
 ### Senders
 #### RTP transport
+
+For Nodes transmitting H.264 using the RTP payload mapping defined by RFC 6184, the Sender resource MUST indicate `urn:x-nmos:transport:rtp` or one of its subclassifications for the `transport` attribute.
+
+Sender resources provide no indication of media type or format, since this is described by the associated Flow resource.
+
+For Nodes implementing IS-04 v1.3 or higher, the following additional requirements on the Sender resource apply.
+
+In addition to those attributes defined in IS-04 for Senders, the following attributes defined in the [Sender Attributes Register](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/) of the NMOS Parameter Registers are used for H.264.
+
+- [Bit Rate](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#bit-rate)
+  The Sender resource SHOULD indicate the target bit rate (kilobits/second) including the transport overhead of the H.264 stream. The value is for the IP packets, so for the RTP payload format per RFC 6184, that includes the RTP, UDP and IP packet headers and the payload. The `bit_rate` integer value is expressed in units of 1000 bits per second, rounding up. The Sender's transport `bit_rate` value MUST derive from the Flow's encoding `bit_rate` value and according to the Flow's `constant_bit_rate` attribute it corresponds to a constant bit rate or a maximum bit rate. 
+
+  If the Sender meets the traffic shaping and delivery timing requirements specified for ST 2110-22 it MUST indicate the transport `bit_rate`.
+
+  Informative note: This definition is consistent with the definition of the bit rate attribute required by ST 2110-22 in the SDP media description. There is no such SDP attribute in RFC 6184.
+
+- [Packet Transmission Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#packet-transmission-mode)
+  A Sender using the non-interleaved or interleaved packetization modes MUST include the `packet_transmission_mode` attribute and set it to either `non_interleaved_nal_units` or `interleaved_nal_units`. The `packet_transmission_mode` attribute maps the the RFC 6184 `packetization-mode` parameter with `single_nal_unit` corresponding to value 0, `non_interleaved_nal_units` to value 1 and `interleaved_nal_units` to value 2. Since the default value of this attribute is `single_nal_unit`, the Sender MAY omit this attribute when using that mode. 
+
+- [ST 2110-21 Sender Type](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#st-2110-21-sender-type)
+  If the Sender complies with the traffic shaping and delivery timing requirements for ST 2110-22, it MUST include the `st2110_21_sender_type` attribute.
+
+- [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
+  A Sender operating in strict-Flow mode MUST set the `parameter_sets_flow_mode` attribute to `strict` and if operating in static-Flow mode it MUST set the `parameter_sets_flow_mode` attribute to `static`. Otherwise it MAY omit or set the `parameter_sets_flow_mode` attribute to `dynamic`. If unspecified the default value is `dynamic`. See the "Parameter Sets" section for more details.
+
+- [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)
+  A Sender operating with out-of-band parameter sets MUST set the `parameter_sets_transport_mode` attribute to either `out_of_band` or `in_and_out_of_band`. Otherwise it MAY omit or set the `parameter_sets_transport_mode` attribute to `in_band`. If unspecified the default value is `in_band`. See the "Parameter Sets" section for more details.
+
+The H.264 encoder associated with a Sender MUST produces an H.264 bitstream that is compliant with the `profile-level-id` explicitely or implicitely declared in the stream's associated SDP transport file or the members profile_idc, level_idc and constraint_set\<N\>_flag of the AVC_video_descriptor of an MPEG2-TS transport stream.
+
+An example Sender resource is provided in the [Examples](../examples/).
+
 ##### SDP format-specific parameters
 
 This section applies to a Sender with RTP transport directly associated to an H.264 Flow through the Sender's `flow_id` attribute.
@@ -144,7 +176,7 @@ Therefore:
 
 - The `sprop-interleaving-depth`, `sprop-deint-buf-req`, `sprop-init-buf-time` and `sprop-max-don-diff` format-specific parameters SHOULD be included with the correct value if the `packetization-mode` equals one of the interleaved modes unless they correspond to their default value.
 
-- The `sprop-parameter-sets` MUST always be included if the Sender `parameter_sets_transport_mode` property is `out_of_band` and SHOULD be included if the property is `in_and_out_of_band`.
+- The `sprop-parameter-sets` MUST always be included if the Sender `parameter_sets_transport_mode` attribute is `out_of_band` and SHOULD be included if the attribute is `in_and_out_of_band`.
 
 The stream's active parameter sets MUST be compliant with the format-specific parameters, except `sprop-parameter-sets`, declared in the "fmtp=" attribute of an SDP transport file.
 
@@ -153,7 +185,28 @@ If the Sender meets the traffic shaping and delivery timing requirements specifi
 If the Sender meets the traffic shaping and delivery timing requirements specified for IPMX, the SDP transport file MUST also comply with the provisions of IPMX.
 
 #### Other transports
+
+For Nodes transmitting H.264 using other transports, the Sender resource MUST indicate the associated `urn:x-nmos:transport:` label of the transport or one of its subclassifications for the `transport` attribute.
+
+Sender resources provide no indication of media type or format, since this is described by the associated Flow resource.
+
+The `manifest_href` attribute MAY be `null` if an SDP transport file is not supported by the transport. Otherwise the SDP transport file MUST comply the transport specific requirements. There is no SDP format-specific parameters requirements for transports other than RTP.
+
+- [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
+  A Sender operating in strict-Flow mode MUST set the `parameter_sets_flow_mode` attribute to `strict` and if operating in static-Flow mode it MUST set the `parameter_sets_flow_mode` attribute to `static`. Otherwise it MAY omit or set the `parameter_sets_flow_mode` attribute to `dynamic`. If unspecified the default value is `dynamic`. See the "Parameter Sets" section for more details.
+
+- [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)
+  A Sender operating with out-of-band parameter sets MUST set the `parameter_sets_transport_mode` attribute to either `out_of_band` or `in_and_out_of_band`. Otherwise it MAY omit or set the `parameter_sets_transport_mode` attribute to `in_band`. If unspecified the default value is `in_band`. See the "Parameter Sets" section for more details.
+
+Informative note: The out of band mechanism used to transport parameter sets is transport specific and out of scope of this specification.
+
+The H.264 encoder associated with a Sender MUST produces an H.264 bitstream that is compliant with the profile and level explicitely or implicitely declared using and out-of-band transport specific mechanism or in the members profile_idc, level_idc and constraint_set\<N\>_flag of the AVC_video_descriptor of an MPEG2-TS transport stream.
+
 #### Multiplexed Flows
+
+A Sender associated with a multiplexed Flow having some H.264 parents Flows MAY declare the `parameter_sets_flow_mode` and `parameter_sets_transport_mode` properties that MUST apply for all the parents H.264 bistreams flowing through the Sender.
+
+Informative note: This applies to all the multiplexed video and audio Flows having the `parameter_sets_flow_mode` and `parameter_sets_transport_mode` attributes defined.
 
 ## H.264 IS-04 Receivers
 ### RTP transport
@@ -168,6 +221,8 @@ If the Sender meets the traffic shaping and delivery timing requirements specifi
 ## H.264 IS-11 Senders and Receivers
 ### RTP transport
 ### Other transports
+
+## Parameter Sets
 
 ## Controllers
 
