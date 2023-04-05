@@ -277,7 +277,7 @@ The following parameter constraints can be used to express limits or preferences
 
 - [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
   
-  A Receiver declares the `parameter_sets_flow_mode` capability to indicate that it supports bitstreams using parameter sets associated with strictly one (`strict`), one (`static`) or multiple (`dynamic`) Flows. Considering that an active parameter set is associated with a specific Flow, this capability indicates that a Receiver is capable or not of decoding an H.264 bitstream where the associated Flow properties change dynamically. 
+  A Receiver declares the `parameter_sets_flow_mode` capability to indicate that it supports bitstreams using parameter sets associated with strictly one (`strict`), one (`static`) or multiple (`dynamic`) Flows. Considering that active parameter sets are associated with a specific Flow, this capability indicates that a Receiver is capable or not of decoding an H.264 bitstream where the associated Flow attributes change dynamically. 
   
   A Receiver supporting the `dynamic` mode MUST also support the `strict` and `static` modes. Such Receiver SHOULD have `strict`, `static` and `dynamic` values enumerated in the Receiver Capability in order to allow Senders operating in any `parameter_sets_flow_mode`.
 
@@ -295,7 +295,7 @@ The following parameter constraints can be used to express limits or preferences
 
 - [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
   
-  A Receiver declares the `parameter_sets_flow_mode` capability to indicate that it supports bitstreams using parameter sets associated with strictly one (`strict`), one (`static`) or multiple (`dynamic`) Flows. Considering that an active parameter set is associated with a specific Flow, this capability indicates that a Receiver is capable or not of decoding an H.264 bitstream where the associated Flow properties change dynamically. 
+  A Receiver declares the `parameter_sets_flow_mode` capability to indicate that it supports bitstreams using parameter sets associated with strictly one (`strict`), one (`static`) or multiple (`dynamic`) Flows. Considering that active parameter sets are associated with a specific Flow, this capability indicates that a Receiver is capable or not of decoding an H.264 bitstream where the associated Flow attributes change dynamically. 
 
   A Receiver consuming H.264 using the RTP payload mapping defined by RFC 2250 MUST support the `dynamic` mode or be unconstrained.
 
@@ -315,7 +315,7 @@ For Receivers indicating `urn:x-nmos:format:video` for the `format` attribute, t
 
 - [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
   
-  A Receiver declares the `parameter_sets_flow_mode` capability to indicate that it supports bitstreams using parameter sets associated with strictly one (`strict`), one (`static`) or multiple (`dynamic`) Flows. Considering that an active parameter set is associated with a specific Flow, this capability indicates that a Receiver is capable or not of decoding an H.264 bitstream where the associated Flow properties change dynamically. 
+  A Receiver declares the `parameter_sets_flow_mode` capability to indicate that it supports bitstreams using parameter sets associated with strictly one (`strict`), one (`static`) or multiple (`dynamic`) Flows. Considering that active parameter sets are associated with a specific Flow, this capability indicates that a Receiver is capable or not of decoding an H.264 bitstream where the associated Flow attributes change dynamically. 
 
   A Receiver supporting the `dynamic` mode MUST also support the `strict` and `static` modes. Such Receiver SHOULD have `strict`, `static` and `dynamic` values enumerated in the Receiver Capability in order to allow Senders operating in any `parameter_sets_flow_mode`.
 
@@ -333,7 +333,7 @@ For Receivers indicating `urn:x-nmos:format:mux` for the `format` attribute, the
 
 - [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
   
-  A Receiver declares the `parameter_sets_flow_mode` capability to indicate that it supports bitstreams using parameter sets associated with strictly one (`strict`), one (`static`) or multiple (`dynamic`) Flows. Considering that an active parameter set is associated with a specific Flow, this capability indicates that a Receiver is capable or not of decoding an H.264 bitstream where the associated Flow properties change dynamically. 
+  A Receiver declares the `parameter_sets_flow_mode` capability to indicate that it supports bitstreams using parameter sets associated with strictly one (`strict`), one (`static`) or multiple (`dynamic`) Flows. Considering that active parameter sets are associated with a specific Flow, this capability indicates that a Receiver is capable or not of decoding an H.264 bitstream where the associated Flow attributes change dynamically. 
 
   A Receiver consuming H.264 from a multiplexed stream MUST support the `dynamic` mode or be unconstrained.
 
@@ -364,7 +364,45 @@ For Receivers indicating `urn:x-nmos:format:mux` for the `format` attribute, the
 
   If the Receiver is not capable of consuming the stream described by a `PATCH` on the **/staged** endpoint, it SHOULD reject the request. If it is unable to assess the stream compatibility because some parameters are not included `PATCH` request, it MAY accept the request and postpone stream compatibility assessment.
 
-### Parameter Sets
+## Parameter Sets
+
+The active parameter sets of an H.264 stream are made of the active sequence and picture parameter sets. The parameter sets of an H.264 stream are transmitted by a Sender to a number of Receivers either out-of-band through an SDP transport file or other out-of-band transport specific mechanism, or in-band through the coded stream. The active parameter sets of an H.264 coded stream MUST reference valid out-of-band or in-band parameter sets, the stream is invalid otherwise.
+
+The `sprop-parameter-sets` parameter of an SDP transport file MAY contain a collection of out-of-band parameter sets. Those parameter sets provide initial parameter sets for the H.264 stream before the decoding starts.
+
+An H.264 stream MAY transport in-band parameter sets to update or duplicate parameter sets received out-of-band, to define additional parameter sets or to update or duplicate parameter sets received in-band. The `parameter_sets_transport_mode` Receiver Capability indicates when set to `in_band` or `in_and_out_of_band` that a Receiver supports getting updated, duplicated or additional parameter sets in-band. When set to `out_of_band` a Receiver only supports getting initial parameter sets from the SDP transport file. In all the cases the Receiver MUST support getting duplicated parameter sets in-band.
+
+The `sprop-parameter-sets` parameter MAY be used by the Receiver to assert the `parameter_sets_transport_mode` in use by the Sender. The in-and-out-of-band mode is signaled if `sprop-parameter-sets` is present and not empty, and terminates by an empty NAL unit (i.e. an empty byte sequence that is base64 encoded). An `sprop-parameter-sets` parameter terminates by an empty NAL unit if it ends by a comma ','. The terminating colon ',' indicates that more parameter sets will be received in-band, indicating the in-and-out-of-band mode. The out-of-band mode is signaled when `sprop-parameter-sets` is present and not empty, and not terminated by a comma ','. The in-band mode is signaled when `sprop-parameter-sets` is not present or empty. A Sender MUST terminate the `sprop-parameter-sets` parameter by a comma ',' if it operates in in-and-out-of-band mode and MUST not terminate it by a comma ',' in out-of-band mode.
+
+Informative note: It results that an H.264 Sender operating in in-and-out-of-band mode that is not sending parameter sets out-of-band will set the  `sprop-parameter-sets` parameter to a single comma ',' value.
+
+### Receivers
+
+A Receiver MUST verify that the active parameter sets comply with the Receiver's Capabilities. If a Receiver support only out-of-band parameter sets it SHOULD perform the verification when a Controller PATCH the **/staged** endpoint for activation. In this situation, all the out-of-band parameter sets MUST be compliant with the Receiver Capabilities. Otherwise if a Receiver supports both out-of-band and in-band parameter sets it SHOULD perform the verification of the out-of-band parameter sets when a Controller PATCH the **/staged** endpoint for activation and it MUST perform the verification of the in-band parameter sets just-in-time as it decodes the stream. In this situation, all the out-of-band and in-band parameter sets MUST be compliant with the Receiver Capabilities.
+
+The `parameter_sets_flow_mode` Receiver Capability indicates when set to `dynamic` that a Receiver supports decoding an H.264 stream where the active parameter sets values associated with Flow attributes may changes dynamically. The Flow attributes that are allowed to change correspond to the following attributes of a video coded Flow: grain_rate, frame_width, frame_height, colorspace, interlace_mode, transfer_characteristic, components, profile, level, bit_rate and constant_bit_rate. The "static" mode is more restrictive, requiring active parameter sets values associated with Flow attributes to be constant, with the exception of the Flow's bit_rate attribute that is allowed to change. The "strict" mode further restrict that at most one SPS be used by the coded stream.
+
+Informative note: The Flow bit_rate attribute is not included in the previous criterion to allow changing HRD parameters to adapt to IP usable bandwidth changing conditions in `static` mode.
+
+A Receiver with the `parameter_sets_flow_mode` capability set to `strict` requires that a coded stream uses picture parameter sets that are defined once and associated with at most one Flow and at most one sequence parameter set that is defined once. Such parameter sets MAY be obtained out-of-band or in-band depending on the Receiver `parameter_sets_transport_mode` Capability. When obtained out-of-band the `sprop-parameter-sets` parameter of an SDP transport file or the parameter sets from a transport specific out-of-band mechanism MUST contain picture parameter sets associated with only one Flow and one sequence parameter set. When obtained in-band the `sprop-parameter-sets` parameter of an SDP transport file or the parameter sets from a transport specific out-of-band mechanism MUST be empty or omitted and the Sender transmits the picture parameter sets associated with the Flow in-band along with a sequence parameter set. At all time, the Sender is allowed to transmit in-band parameter sets that are duplicates of the parameter sets obtained either out-of-band or in-band. When obtained in-and-out-of-band, in-band parameter sets have priority over out-of-band parameters sets.
+
+A Receiver with this capability set to `static` requires that a coded stream uses parameter sets associated with at most one Flow. Such parameter sets MAY be obtained out-of-band or in-band depending on the Receiver `parameter_sets_transport_mode` Capability. When obtained out-of-band the `sprop-parameter-sets` parameter of an SDP transport file or the parameter sets from a transport specific out-of-band mechanism MUST contain parameter sets associated with only one Flow. When obtained in-band the `sprop-parameter-sets` parameter of an SDP transport file or the parameter sets from a transport specific out-of-band mechanism MUST be empty or omitted and the Sender transmits the parameter sets associated with the Flow in-band. At all time, the Sender is allowed to transmit in-band parameter sets that are duplicates of the parameter sets obtained either out-of-band or in-band. When obtained in-and-out-of-band, in-band parameter sets have priority over out-of-band parameters sets.
+
+Informative note: The `static` mode allows multiple SPS and PPS to be used by the coded bitstream as long as the active values associated with Flow attributes do not change. For example scaling list are allowed to change when the profile allows it.
+
+A Receiver with this capability set to `dynamic` supports that a coded stream uses parameter sets that MAY be associated with multiple Flows. Such parameter sets MAY be obtained out-of-band or in-band according to the Receiver `parameter_sets_transport_mode` Capability. When obtained out-of-band the `sprop-parameter-sets` parameter of an SDP transport file or the parameter sets from a transport specific out-of-band mechanism MAY contain parameter sets associated with multiple Flows. When obtained in-band the `sprop-parameter-sets` parameter of an SDP transport file or the parameter sets from a transport specific out-of-band mechanism MUST be empty or omitted and the Sender MAY transmit in-band parameter sets to update parameter sets initially received out-of-band or to add and update new ones. At all time, the Sender is allowed to transmit in-band parameter sets that are duplicates of the parameter sets obtained either out-of-band or in-band. When obtained in-and-out-of-band, in-band parameter sets have priority over out-of-band parameters sets.
+
+### Senders
+
+A Sender is allowed, unless constrained by IS-11, to produces an H.264 coded stream that is compliant with the `profile` and `level` of the associated Flow. Such a Sender MAY use one or multiple active parameter sets as per the [H.264][] specification. A Sender MAY seamlessly change dynamically the coded stream's active parameter set, provided that the Flow associated with the Sender changes accordingly and the content of the SDP transport file does not change. If the content of the SDP transport file changes, the Sender MUST comply with IS-04, IS-05. A Sender indicates its mode of operation with the `parameter_sets_flow_mode` and `parameter_sets_transport_mode` attributes.
+
+A Sender MUST transport parameter sets `in_band` when the H.264 stream is transmitted over an MPEG2-TS based transport as per the [H.222][] specification.
+
+A Sender operating with `parameter_sets_flow_mode` set to `strict` MUST produce a coded bitstream using at most one SPS and MAY use a number of PPS associated with at most one Flow. The parameter sets MUST be defined once in-band or out-of-band and MAY be refreshed by in-band duplicates.
+
+A Sender operating with `parameter_sets_flow_mode` set to `static` MAY produce a coded bitstream using a number of SPS and PPS that MUST be associated with at most one Flow. The parameter sets MAY be defined in-band or out-of-band and MAY be refreshed by in-band duplicates or updated, replaced or augmented by in-band ones.
+
+A Sender operating with `parameter_sets_flow_mode` set to `dynamic` MAY produce a coded bitstream using a number of SPS and PPS that MAY be associated with multiple Flows. The parameter sets MAY be defined in-band or out-of-band and MAY be refreshed by in-band duplicates or updated, replaced or augmented by in-band ones.
 
 ## H.264 IS-11 Senders and Receivers
 ### RTP transport
