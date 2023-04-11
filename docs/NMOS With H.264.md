@@ -394,7 +394,7 @@ A Receiver with this capability set to `dynamic` supports that a coded stream us
 
 ### Senders
 
-A Sender is allowed, unless constrained by IS-11, to produces an H.264 coded stream that is compliant with the `profile` and `level` of the associated Flow. Such a Sender MAY use one or multiple active parameter sets as per the [H.264][] specification. A Sender MAY seamlessly change dynamically the coded stream's active parameter set, provided that the Flow associated with the Sender changes accordingly and the content of the SDP transport file does not change. If the content of the SDP transport file changes, the Sender MUST comply with IS-04, IS-05. A Sender indicates its mode of operation with the `parameter_sets_flow_mode` and `parameter_sets_transport_mode` attributes.
+A Sender is allowed, unless constrained by IS-11, to produces an H.264 coded stream that is compliant with the `profile` and `level` of the associated Flow. Such a Sender MAY use one or multiple active parameter sets as per the [H.264][] specification. A Sender MAY seamlessly change dynamically the coded stream's active parameter sets, provided that the Flow associated with the Sender changes accordingly and the content of the SDP transport file does not change. If the content of the SDP transport file changes, the Sender MUST comply with IS-04, IS-05. A Sender indicates its mode of operation with the `parameter_sets_flow_mode` and `parameter_sets_transport_mode` attributes.
 
 A Sender MUST transport parameter sets `in_band` when the H.264 stream is transmitted over an MPEG2-TS based transport as per the [H.222][] specification.
 
