@@ -204,7 +204,7 @@ The `manifest_href` attribute MAY be `null` if an SDP transport file is not supp
 - [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)  
   A Sender operating with out-of-band parameter sets MUST set the `parameter_sets_transport_mode` attribute to either `out_of_band` or `in_and_out_of_band`. Otherwise it MAY omit or set the `parameter_sets_transport_mode` attribute to `in_band`. If unspecified the default value is `in_band`. See the [Parameter Sets](#parameter-sets) section for more details.
 
-Informative note: The out of band mechanism used to transmit parameter sets is transport specific and out of the scope of this specification.
+  Informative note: The out of band mechanism used to transmit parameter sets is transport specific and out of the scope of this specification.
 
 ## H.264 IS-04 Receivers
 
