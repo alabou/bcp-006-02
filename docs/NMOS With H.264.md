@@ -152,10 +152,10 @@ In addition to those attributes defined in IS-04 for Senders, the following attr
 - [ST 2110-21 Sender Type](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#st-2110-21-sender-type)  
   If the Sender complies with the traffic shaping and delivery timing requirements for ST 2110-22, it MUST include the `st2110_21_sender_type` attribute.
 
-- [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)  
+- [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#parameter-sets-flow-mode)  
   A Sender operating in strict-Flow mode MUST set the `parameter_sets_flow_mode` attribute to `strict` or if operating in static-Flow mode it MUST set the `parameter_sets_flow_mode` attribute to `static`. Otherwise it MAY omit or set the `parameter_sets_flow_mode` attribute to `dynamic`. If unspecified the default value is `dynamic`. See the [Parameter Sets](#parameter-sets) section for more details.
 
-- [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)  
+- [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#parameter-sets-transport-mode)  
   A Sender operating with out-of-band parameter sets MUST set the `parameter_sets_transport_mode` attribute to either `out_of_band` or `in_and_out_of_band`. Otherwise it MAY omit or set the `parameter_sets_transport_mode` attribute to `in_band`. If unspecified the default value is `in_band`. See the [Parameter Sets](#parameter-sets) section for more details.
 
 An example Sender resource is provided in the [Examples](../examples/).
@@ -198,10 +198,10 @@ Sender resources provide no indication of media type or format, since this is de
 
 The `manifest_href` attribute MAY be `null` if an SDP transport file is not supported by the transport. Otherwise the SDP transport file MUST comply with the transport specific requirements. There is no SDP format-specific parameters requirements for transports other than RTP.
 
-- [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)  
+- [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#parameter-sets-flow-mode)  
   A Sender operating in strict-Flow mode MUST set the `parameter_sets_flow_mode` attribute to `strict` or if operating in static-Flow mode it MUST set the `parameter_sets_flow_mode` attribute to `static`. Otherwise it MAY omit or set the `parameter_sets_flow_mode` attribute to `dynamic`. If unspecified the default value is `dynamic`. See the [Parameter Sets](#parameter-sets) section for more details.
 
-- [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)  
+- [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#parameter-sets-transport-mode)  
   A Sender operating with out-of-band parameter sets MUST set the `parameter_sets_transport_mode` attribute to either `out_of_band` or `in_and_out_of_band`. Otherwise it MAY omit or set the `parameter_sets_transport_mode` attribute to `in_band`. If unspecified the default value is `in_band`. See the [Parameter Sets](#parameter-sets) section for more details.
 
   Informative note: The out of band mechanism used to transmit parameter sets is transport specific and out of the scope of this specification.
