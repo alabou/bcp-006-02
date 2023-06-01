@@ -103,7 +103,7 @@ These attributes provide information for Controllers and Users to evaluate strea
 
 The Flow's `profile` and `level` attributes map to the `profile-level-id` parameter of the SDP transport file. See the [SDP format-specific parameters](#sdp-format-specific-parameters) section.
 
-The Flow's `profile` and `level` attributes map to the members profile_idc, level_idc and constraint_set\<N\>_flag of the AVC_video_descriptor of an MPEG2-TS transport stream. See section Multiplexed Flows.
+The Flow's `profile` and `level` attributes map to the members profile_idc, level_idc and constraint_set\<N\>_flag of the AVC_video_descriptor of an MPEG2-TS transport stream. See the [RTP transport based on RFC 2250](#rtp-transport-based-on-rfc-2250) section.
 
 Informative note: The Flow's `profile` and `level` attributes are always required. The SDP transport file `profile-level-id` parameter may be omitted when matching the default value.
 
