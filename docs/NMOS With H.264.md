@@ -162,11 +162,7 @@ An example Sender resource is provided in the [Examples](../examples/).
 
 ##### SDP format-specific parameters
 
-This section applies to a Sender with RTP transport directly associated with an H.264 Flow through the Sender's `flow_id` attribute.
-
-Informative note: When an H.264 Flow is not directly associated with a Sender but with another Flow through the Flow's parents attribute, it does not have to provide format-specific attributes in the form of an SDP transport file. A Sender has such requirement only for the Flow directly associated with it.
-
-The SDP file at the `manifest_href` MUST comply with the requirements of RFC 6184 in the [Usage in Declarative Session Descriptions](https://datatracker.ietf.org/doc/html/rfc6184#section-8.2.3) mode of operation. The SDP Offer/Answer Model described in RFC 6184 is not supported. The `fmtp` source attribute as specified in Section 6.3 of [RFC 5576][RFC-5576] is not supported.
+The SDP file at the `manifest_href` MUST comply with the requirements of RFC 6184 in the [Usage in Declarative Session Descriptions](https://datatracker.ietf.org/doc/html/rfc6184#section-8.2.3) mode of operation. The SDP Offer/Answer Model described in Section 8.2.2 of RFC 6184 is not supported. The `fmtp` source attribute as specified in Section 6.3 of [RFC 5576][RFC-5576] is not supported, i.e. use-level-src-parameter-sets parameter is not present or equal to 0.
 
 Additionally, the SDP transport file needs to convey, so far as the defined format-specific parameters allow, the same information about the stream as conveyed by the Source, Flow and Sender attributes defined by this specification and IS-04, unless such information is conveyed through in-band parameter sets.
 
@@ -178,7 +174,7 @@ Therefore:
 
 - The `sprop-interleaving-depth`, `sprop-deint-buf-req`, `sprop-init-buf-time` and `sprop-max-don-diff` format-specific parameters SHOULD be included with the correct value if the `packetization-mode` equals one of the interleaved modes unless they correspond to their default value.
 
-- The `sprop-parameter-sets` MUST always be included if the Sender `parameter_sets_transport_mode` attribute is `out_of_band` and SHOULD be included if the attribute is `in_and_out_of_band`.
+- The `sprop-parameter-sets` MUST always be included if the Sender `parameter_sets_transport_mode` attribute is `out_of_band`.
 
 The stream's active parameter sets MUST be compliant with the format-specific parameters, except `sprop-parameter-sets`, declared in the "fmtp=" attribute of an SDP transport file.
 
