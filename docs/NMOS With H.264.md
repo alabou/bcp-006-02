@@ -127,7 +127,9 @@ Examples Flow resources are provided in [Examples](../examples/).
 
 This section applies to a Sender directly associated with an H.264 Flow through the Sender's `flow_id` attribute.
 
-Informative note: When an H.264 Flow is not directly associated with a Sender but with a multiplexed Flow through the Flow's parents attribute, the Sender does not provide H.264 format-specific attributes. A Sender provides such attributes only when the H.264 Flow is directly associated with it. The attributes `parameter_sets_flow_mode` and `parameter_sets_transport_mode` associated with an H.264 Flow that are described in this section get their respective default value of `dynamic` and `in_band`. An H.264 Flow's behaviour is dictated by the `dynamic` and `in_band` modes when there is no associated Sender. See the Sender's (multiplexed) format specification for details.
+Informative note: When an H.264 Flow is not directly associated with a Sender but with a multiplexed Flow through the Flow's parents attribute, the Sender does not provide H.264 format-specific attributes. A Sender provides such attributes only when the H.264 Flow is directly associated with it. The attributes `parameter_sets_flow_mode` and `parameter_sets_transport_mode` associated with an H.264 Flow that are described in this section get their respective default value of `dynamic` and `in_band`.  
+
+For multiplexed H.264 Flows, the Sender MUST conform to the behaviour dictated by the `dynamic` and `in_band` modes described in this specification.
 
 Sender resources provide no indication of media type or format, since this is described by the associated Flow resource.
 
