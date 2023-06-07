@@ -140,7 +140,7 @@ For Nodes implementing IS-04 v1.3 or higher, the following additional requiremen
 In addition to those attributes defined in IS-04 for Senders, the following attributes defined in the [Sender Attributes Register](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/) of the NMOS Parameter Registers are used for H.264.
 
 - [Bit Rate](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#bit-rate)  
-  The Sender resource SHOULD indicate the target bit rate (kilobits/second) including the transport overhead of the H.264 stream. The value is for the IP packets, so for the RTP payload format per RFC 6184, that includes the RTP, UDP and IP packet headers and the payload. The `bit_rate` integer value is expressed in units of 1000 bits per second, rounding up. The Sender's transport `bit_rate` value MUST derive from the Flow's encoding `bit_rate` value and according to the Flow's `constant_bit_rate` attribute it corresponds to a constant bit rate or a maximum bit rate. 
+  The Sender resource SHOULD indicate the target bit rate (kilobits/second) including the transport overhead of the H.264 stream. The value is for the IP packets, so for the RTP payload format per RFC 6184, that includes the RTP, UDP and IP packet headers and the payload. The `bit_rate` integer value is expressed in units of 1000 bits per second, rounding up. The Sender's transport `bit_rate` indicates a constant bit rate or a maximum bit rate depending on the `constant_bit_rate` attribute of the associated Flow. 
 
   If the Sender meets the traffic shaping and delivery timing requirements specified for ST 2110-22 it MUST indicate the transport `bit_rate`.
 
