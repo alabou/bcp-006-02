@@ -333,7 +333,7 @@ If IS-04 Sender `manifest_href` is not `null`, the SDP transport file at the **/
 
 A `PATCH` request on the **/staged** endpoint of an IS-05 Receiver can contain an SDP transport file in the `transport_file` attribute. The SDP transport file for a H.264 stream is expected to comply with RFC 6184 and, if appropriate, ST 2110-22 or IPMX. It need not comply with the additional requirements specified for SDP transport files at Senders.
 
-If the Receiver is not capable of consuming the stream described by a `PATCH` on the **/staged** endpoint, it SHOULD reject the request. If it is unable to assess the stream compatibility because some parameters are not included `PATCH` request, it MAY accept the request and postpone stream compatibility assessment.
+If the Receiver is not capable of consuming the stream described by a `PATCH` on the **/staged** endpoint, it SHOULD reject the request. If it is unable to assess the stream compatibility because some parameters are not included in the `PATCH` request, it MAY accept the request and postpone stream compatibility assessment.
   
 ### Other transports
 
